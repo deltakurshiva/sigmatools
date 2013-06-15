@@ -1,4 +1,3 @@
-This repository contains tools for the SIGMA DELTA online radio.
+This repository contains tools used for the SIGMA LOOP online radio.
 
-Currently it contains a Xbox 360 MIDI mapping for MIDIHID, a Mixxx MIDI controller that
-can receive from it, and a work-in-progress direct Mixxx HID scheme for that controller.
+Currently it contains a Xbox 360 MIDI mapping for [MidiHID](http://www.polhosting.info/web-archives/midihid/), a [Mixxx](http://mixxx.org/) MIDI controller that can receive from it, and a work-in-progress direct Mixxx HID scheme for that controller.
