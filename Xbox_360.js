@@ -12,21 +12,21 @@ function Xbox360Controller() {
         packet = new HIDPacket("control", [0x0, 0x14], 14);
 
         // Toggle buttons.
-        packet.addControl("hid", "left_bumper", 2, "B", 0x01);
-        packet.addControl("hid", "right_bumper", 2, "B", 0x02);
-        packet.addControl("hid", "guide", 2, "B", 0x04);
-        packet.addControl("hid", "a_button", 2, "B", 0x10);
-        packet.addControl("hid", "b_button", 2, "B", 0x20);
-        packet.addControl("hid", "x_button", 2, "B", 0x40);
-        packet.addControl("hid", "y_button", 2, "B", 0x80);
-        packet.addControl("hid", "dpad_up", 3, "B",  0x01);
-        packet.addControl("hid", "dpad_down", 3, "B", 0x02);
-        packet.addControl("hid", "dpad_left", 3, "B", 0x04);
-        packet.addControl("hid", "dpad_right", 3, "B", 0x08);
-        packet.addControl("hid", "start", 3, "B", 0x10);
-        packet.addControl("hid", "back", 3, "B", 0x20);
-        packet.addControl("hid", "left_stick_click", 3, "B", 0x40);
-        packet.addControl("hid", "right_stick_click", 3, "B", 0x80);
+        packet.addControl("hid", "left_bumper", 3, "B", 0x01);
+        packet.addControl("hid", "right_bumper", 3, "B", 0x02);
+        packet.addControl("hid", "guide", 3, "B", 0x04);
+        packet.addControl("hid", "a_button", 3, "B", 0x10);
+        packet.addControl("hid", "b_button", 3, "B", 0x20);
+        packet.addControl("hid", "x_button", 3, "B", 0x40);
+        packet.addControl("hid", "y_button", 3, "B", 0x80);
+        packet.addControl("hid", "dpad_up", 2, "B",  0x01);
+        packet.addControl("hid", "dpad_down", 2, "B", 0x02);
+        packet.addControl("hid", "dpad_left", 2, "B", 0x04);
+        packet.addControl("hid", "dpad_right", 2, "B", 0x08);
+        packet.addControl("hid", "start", 2, "B", 0x10);
+        packet.addControl("hid", "back", 2, "B", 0x20);
+        packet.addControl("hid", "left_stick_click", 2, "B", 0x40);
+        packet.addControl("hid", "right_stick_click", 2, "B", 0x80);
 
         // 0x0 left, 0xff right
         packet.addControl("hid","left_stick_x",0x6,"B");
