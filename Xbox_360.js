@@ -14,21 +14,21 @@ function Xbox360Controller() {
 
         // Toggle buttons
         
-        packet.addControl("hid","guide",2,"H",0x0004);
-        packet.addControl("hid","back",2,"H",0x2000);
-        packet.addControl("hid","start",2,"H",0x1000);
         packet.addControl("hid","left_bumper",2,"H",0x0001);
         packet.addControl("hid","right_bumper",2,"H",0x0002);
+        packet.addControl("hid","guide",2,"H",0x0004);
         packet.addControl("hid","a_button",2,"H",0x0010);
         packet.addControl("hid","b_button",2,"H",0x0020);
         packet.addControl("hid","x_button",2,"H",0x0040);
         packet.addControl("hid","y_button",2,"H",0x0080);
-        packet.addControl("hid","left_stick_click",2,"H",0x4000);
-        packet.addControl("hid","right_stick_click",2,"H",0x8000);
         packet.addControl("hid","dpad_up",2,"H",0x0100);
         packet.addControl("hid","dpad_down",2,"H",0x0200);
         packet.addControl("hid","dpad_left",2,"H",0x0400);
         packet.addControl("hid","dpad_right",2,"H",0x0800);
+        packet.addControl("hid","start",2,"H",0x1000);
+        packet.addControl("hid","back",2,"H",0x2000);
+        packet.addControl("hid","left_stick_click",2,"H",0x4000);
+        packet.addControl("hid","right_stick_click",2,"H",0x8000);
 
         // 0x0 left, 0xff right
         packet.addControl("hid","left_stick_x",0x6,"B");
@@ -108,26 +108,21 @@ Xbox360.registerCallbacks = function(id) {
     }
 
     // Link HID buttons to UI buttons
-    controller.linkControl("hid","guide","[Microphone]","talkover");
-    
     controller.linkControl("hid","left_bumper","deck1","play");
     controller.linkControl("hid","right_bumper","deck2","play");
-    
-    controller.linkControl("hid","back","deck1","reloop_exit");
+    controller.linkControl("hid","guide","[Microphone]","talkover");
+    controller.linkControl("hid","a_button","deck2","keylock");
+    controller.linkControl("hid","b_button","deck2","flanger");
+    controller.linkControl("hid","x_button","deck2","beatsync");
+    controller.linkControl("hid","y_button","deck2","cue_default");
+    controller.linkControl("hid","dpad_up","deck1","cue_default");
+    controller.linkControl("hid","dpad_down","deck1","keylock");
+    controller.linkControl("hid","dpad_left","deck1","beatsync");
+    controller.linkControl("hid","dpad_right","deck1","flanger");
     controller.linkControl("hid","start","deck2","reloop_exit");
-    
+    controller.linkControl("hid","back","deck1","reloop_exit");
     controller.linkControl("hid","left_stick_click","deck1","eject");
     controller.linkControl("hid","right_stick_click","deck2","eject");
-    
-    controller.linkControl("hid","dpad_left","deck1","beatsync");
-    controller.linkControl("hid","x_button","deck2","beatsync");
-    controller.linkControl("hid","dpad_up","deck1","cue_default");
-    controller.linkControl("hid","y_button","deck2","cue_default");
-    controller.linkControl("hid","dpad_right","deck1","flanger");
-    controller.linkControl("hid","b_button","deck2","flanger");
-    controller.linkControl("hid","dpad_down","deck1","keylock");
-    controller.linkControl("hid","a_button","deck2","keylock");
-
 
     // Callbacks for toggle buttons front of controller
     controller.setCallback("control","hid","button_bottom_left",Xbox360.front_left);
