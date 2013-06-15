@@ -86,6 +86,13 @@ Xbox360.init = function(id) {
     Xbox360.registerInputPackets();
     Xbox360.registerCallbacks();
     Xbox360.registerOutputPackets();
+    Xbox360.start_xfade_timer();
+
+    controller.xfade_triggers = true;
+    controller.xfade_delta_left = 0;
+    controller.xfade_delta_right = 0;
+    controller.guide_is_pressed = false;
+    
 
     controller.startAutoRepeatTimer = function(timer_id,interval) {
         if (controller.timers[timer_id])
@@ -98,23 +105,6 @@ Xbox360.init = function(id) {
     engine.connectControl("[Master]", "crossfader", "Xbox360.resolve_xfade");    
     HIDDebug("Xbox 360 controller initialized: " + Xbox360.id);
 }
-
-Xbox360.resolve_xfade = function(value, group, control) {
-    var controller = Xbox360.controller;
-    print(value);
-    if (value == 0) {
-        Xbox360.changeLED(controller.LEDStates['off']);
-    } else if (value == 1) {
-        Xbox360.changeLED(controller.LEDStates['on_2']);
-    } else if (value == -1) {
-        Xbox360.changeLED(controller.LEDStates['on_1']);
-    } else if (value > 0) {
-        Xbox360.changeLED(controller.LEDStates['on_4']);
-    } else {
-        Xbox360.changeLED(controller.LEDStates['on_3']);
-    }
-}
-
 
 // Mandatory function for mixxx controllers
 Xbox360.shutdown = function() {
@@ -144,8 +134,7 @@ Xbox360.registerCallbacks = function(id) {
 
     // Link HID buttons to UI buttons
     controller.linkControl("hid","left_bumper","deck1","play");
-    controller.linkControl("hid","right_bumper","deck2","play");
-    controller.linkControl("hid","guide","[Microphone]","talkover");
+    controller.linkControl("hid","right_bumper","deck2","play");    
     controller.linkControl("hid","a_button","deck2","keylock");
     controller.linkControl("hid","b_button","deck2","flanger");
     controller.linkControl("hid","x_button","deck2","beatsync");
@@ -158,6 +147,9 @@ Xbox360.registerCallbacks = function(id) {
     controller.linkControl("hid","back","deck1","reloop_exit");
     controller.linkControl("hid","left_stick_click","deck1","eject");
     controller.linkControl("hid","right_stick_click","deck2","eject");
+
+    // Link guide button to toggle function
+    controller.setCallback("control","hid","guide",Xbox360.toggle_trigger_mode);
 
     // Callbacks for triggers
     controller.setCallback("control","hid","left_trigger",Xbox360.left_volume);
@@ -174,11 +166,19 @@ Xbox360.registerCallbacks = function(id) {
 // resolve triggers
 
 Xbox360.left_volume = function(field) {
-    Xbox360.channel_volume("deck1", field);
+    if (Xbox360.controller.xfade_triggers) {
+        Xbox360.controller.xfade_delta_left = -1 * field.value;
+    } else {
+        Xbox360.channel_volume("deck1", field);
+    }
 }
 
 Xbox360.right_volume = function(field) {
-    Xbox360.channel_volume("deck2", field);
+    if (Xbox360.controller.xfade_triggers) {
+        Xbox360.controller.xfade_delta_right = field.value;
+    } else {
+        Xbox360.channel_volume("deck2", field);
+    }
 }
 
 Xbox360.channel_volume = function(group, field) {
@@ -227,6 +227,64 @@ Xbox360.changeLED = function(code) {
     var field = packet.getField('hid', 'led_ring');
     field.value = code;
     packet.send()
+}
+
+// actual LED mapper
+
+Xbox360.resolve_xfade = function(value, group, control) {
+    var led = Xbox360.controller.LEDStates;
+    if (!Xbox360.controller.xfade_triggers) {
+        return;
+    }
+    if (value == 0) {
+        Xbox360.changeLED(led['off']);
+    } else if (value == 1) {
+        Xbox360.changeLED(led['on_2']);
+    } else if (value == -1) {
+        Xbox360.changeLED(led['on_1']);
+    } else if (value > 0) {
+        Xbox360.changeLED(led['on_4']);
+    } else {
+        Xbox360.changeLED(led['on_3']);
+    }
+}
+
+// Trigger crossfade mode
+
+Xbox360.toggle_trigger_mode = function(field) {
+    var controller = Xbox360.controller;
+    if (controller.guide_is_pressed) {
+       controller.guide_is_pressed  = false;
+       return;
+    }
+    controller.guide_is_pressed = true;
+    controller.xfade_triggers = !controller.xfade_triggers;
+    Xbox360.changeLED(controller.LEDStates['rotate']);
+    Xbox360.resolve_xfade(engine.getValue("[Master]","crossfader"),0,0)
+
+    if (controller.xfade_triggers) {
+        Xbox360.start_xfade_timer();
+    } else {
+        engine.stopTimer(Xbox360.controller.xfade_timer);
+    }
+    HIDDebug("Trigger crossfade mode is now " +  controller.xfade_triggers);
+}
+
+Xbox360.start_xfade_timer = function() {
+    Xbox360.controller.xfade_timer = engine.beginTimer(50,"Xbox360.xfade_listener()");
+}
+
+Xbox360.xfade_listener = function () {
+    var ctrl = Xbox360.controller;
+    var dampening = 2048;
+    current_fade = engine.getValue("[Master]", "crossfader");
+    new_fade = current_fade + (ctrl.xfade_delta_left / dampening) + (ctrl.xfade_delta_right / dampening);
+    if (new_fade > 1) {
+        new_fade = 1;
+    } else if (new_fade < -1 ) {
+        new_fade = -1;
+    }
+    engine.setValue("[Master]", "crossfader", new_fade);
 }
 
 
