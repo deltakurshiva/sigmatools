@@ -2,7 +2,7 @@
 <MixxxControllerPreset schemaVersion="1" mixxxVersion="1.11+">
     <info>
         <name>Microsoft Xbox 360 controller</name>
-        <author>Delta Kurshiva</author>
+        <author>Delta Kurshiva, Shiz</author>
         <description>HID mapping for Microsoft Xbox 360 controller</description>
         <forums>http://www.mixxx.org/forums/</forums>
         <devices>
@@ -12,7 +12,7 @@
     <controller id="Microsoft Xbox 360 controller">
         <scriptfiles>
             <file filename="common-hid-packet-parser.js" functionprefix=""/>
-            <file filename="Xbox_360.js" functionprefix="Xbox360"/>
+            <file filename="Xbox_360_Wired_Controller.js" functionprefix="Xbox360"/>
         </scriptfiles>
     </controller>
 </MixxxControllerPreset>

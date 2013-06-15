@@ -1,6 +1,6 @@
 //
 // Microsoft Xbox 360 controller HID mapping
-// Copyright (C) 2013 Delta Kurshiva
+// Copyright (C) 2013 Delta Kurshiva, Shiz
 // For Mixxx version 1.11.x
 //
 
