@@ -92,6 +92,8 @@ Xbox360.init = function(id) {
     controller.xfade_delta_left = 0;
     controller.xfade_delta_right = 0;
     controller.guide_is_pressed = false;
+    controller.left_stick_y_locked = false;
+    controller.right_stick_y_locked = false;
     
 
     controller.startAutoRepeatTimer = function(timer_id,interval) {
@@ -145,11 +147,13 @@ Xbox360.registerCallbacks = function(id) {
     controller.linkControl("hid","dpad_right","deck1","flanger");
     controller.linkControl("hid","start","deck2","reloop_exit");
     controller.linkControl("hid","back","deck1","reloop_exit");
-    controller.linkControl("hid","left_stick_click","deck1","eject");
-    controller.linkControl("hid","right_stick_click","deck2","eject");
+    //controller.linkControl("hid","left_stick_click","deck1","eject");
+    //controller.linkControl("hid","right_stick_click","deck2","eject");
 
-    // Link guide button to toggle function
+    // buttons that need to call functions
     controller.setCallback("control","hid","guide",Xbox360.toggle_trigger_mode);
+    controller.setCallback("control","hid","left_stick_click",Xbox360.center_xfade);
+    controller.setCallback("control","hid","right_stick_click",Xbox360.center_xfade);
 
     // Callbacks for triggers
     controller.setCallback("control","hid","left_trigger",Xbox360.left_volume);
@@ -192,21 +196,35 @@ Xbox360.channel_volume = function(group, field) {
 // resolve stick x-axis
 
 Xbox360.left_shuttle = function(field) {
+    if (field.value > 5000 || field.value < -5000) {
+        controller.left_stick_y_locked = true;
+    } else {
+        controller.left_stick_y_locked = false;
+    }
     Xbox360.shuttle("deck1", field, 1);
 }
 
 Xbox360.right_shuttle = function(field) {
+    if (field.value > 5000 || field.value < -5000) {
+        controller.right_stick_y_locked = true;
+    } else {
+        controller.right_stick_y_locked = false;
+    }
     Xbox360.shuttle("deck2", field, 1);
 }
 
 // resolve stick y-axis
 
 Xbox360.left_jog = function(field) {
-    Xbox360.shuttle("deck1", field, -16);
+    if (!controller.left_stick_y_locked) {
+        Xbox360.shuttle("deck1", field, -16);
+    }
 }
 
 Xbox360.right_jog = function(field) {
-    Xbox360.shuttle("deck2", field, -16);
+    if (!controller.right_stick_y_locked) {
+        Xbox360.shuttle("deck2", field, -16);
+    }
 }
 
 // shared shuttle code
@@ -274,6 +292,10 @@ Xbox360.start_xfade_timer = function() {
     Xbox360.controller.xfade_timer = engine.beginTimer(50,"Xbox360.xfade_listener()");
 }
 
+Xbox360.center_xfade = function() {
+    engine.setValue("[Master]", "crossfader", 0);
+}
+
 Xbox360.xfade_listener = function () {
     var ctrl = Xbox360.controller;
     var dampening = 2048;
@@ -284,6 +306,10 @@ Xbox360.xfade_listener = function () {
     } else if (new_fade < -1 ) {
         new_fade = -1;
     }
+    /*
+    if (ctrl.xfade_delta_left == -255 && ctrl.xfade_delta_right == 255) {
+        new_fade = 0;
+    } */
     engine.setValue("[Master]", "crossfader", new_fade);
 }
 
