@@ -6,8 +6,13 @@
         <description>HID mapping for Microsoft Xbox 360 controller</description>
         <forums>http://www.mixxx.org/forums/</forums>
         <devices>
-            <!-- Official Xbox 360 Ctrlr -->
+            <!-- Official Xbox 360 Wired Controller -->
             <product protocol="hid" vendor_id="0x045e" product_id="0x028e" usage_page="0x1" usage="0x4" interface_number="0x1" />
+            <!-- Official Xbox 360 Wireless Controller: one receiver can handle up to 4 controllers. -->
+            <product protocol="hid" vendor_id="0x045e" product_id="0x0719" usage_page="0x1" usage="0x4" interface_number="0x1" />
+            <product protocol="hid" vendor_id="0x045e" product_id="0x0719" usage_page="0x1" usage="0x4" interface_number="0x3" />
+            <product protocol="hid" vendor_id="0x045e" product_id="0x0719" usage_page="0x1" usage="0x4" interface_number="0x5" />
+            <product protocol="hid" vendor_id="0x045e" product_id="0x0719" usage_page="0x1" usage="0x4" interface_number="0x7" />
             <!-- BigBen -->
             <product protocol="hid" vendor_id="0x146b" product_id="0x601" usage_page="0x1" usage="0x4" interface_number="0x1" />
             <!-- Joytek -->
