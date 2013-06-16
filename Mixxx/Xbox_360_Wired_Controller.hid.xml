@@ -6,7 +6,20 @@
         <description>HID mapping for Microsoft Xbox 360 controller</description>
         <forums>http://www.mixxx.org/forums/</forums>
         <devices>
+            <!-- Official Xbox 360 Ctrlr -->
             <product protocol="hid" vendor_id="0x045e" product_id="0x028e" usage_page="0x1" usage="0x4" interface_number="0x1" />
+            <!-- BigBen -->
+            <product protocol="hid" vendor_id="0x146b" product_id="0x601" usage_page="0x1" usage="0x4" interface_number="0x1" />
+            <!-- Joytek -->
+            <product protocol="hid" vendor_id="0x162e" product_id="0xbeef" usage_page="0x1" usage="0x4" interface_number="0x1" />
+            <!-- MadCatz -->
+            <product protocol="hid" vendor_id="0x738" product_id="0x4716" usage_page="0x1" usage="0x4" interface_number="0x1" />
+            <!-- MadCatz MicroCon -->
+            <product protocol="hid" vendor_id="0x738" product_id="0x4736" usage_page="0x1" usage="0x4" interface_number="0x1" />
+            <!-- MadCatz Pro -->
+            <product protocol="hid" vendor_id="0x738" product_id="0x4726" usage_page="0x1" usage="0x4" interface_number="0x1" />
+            <!-- TSZ Pelican -->
+            <product protocol="hid" vendor_id="0xe6f" product_id="0x201" usage_page="0x1" usage="0x4" interface_number="0x1" />
         </devices>
     </info>
     <controller id="Microsoft Xbox 360 controller">
