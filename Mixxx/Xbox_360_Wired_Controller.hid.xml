@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <MixxxControllerPreset schemaVersion="1" mixxxVersion="1.11+">
     <info>
-        <name>Microsoft Xbox 360 controller</name>
+        <name>Microsoft Xbox 360 wired controller</name>
         <author>Delta Kurshiva, Shiz</author>
-        <description>HID mapping for Microsoft Xbox 360 controller</description>
+        <description>HID mapping for Microsoft Xbox 360 wired controller</description>
         <forums>http://www.mixxx.org/forums/</forums>
         <devices>
             <!-- Official Xbox 360 Wired Controller -->
             <product protocol="hid" vendor_id="0x045e" product_id="0x028e" usage_page="0x1" usage="0x4" interface_number="0x1" />
-            <!-- Official Xbox 360 Wireless Controller: one receiver can handle up to 4 controllers. -->
-            <product protocol="hid" vendor_id="0x045e" product_id="0x0719" usage_page="0x1" usage="0x4" interface_number="0x1" />
-            <product protocol="hid" vendor_id="0x045e" product_id="0x0719" usage_page="0x1" usage="0x4" interface_number="0x3" />
-            <product protocol="hid" vendor_id="0x045e" product_id="0x0719" usage_page="0x1" usage="0x4" interface_number="0x5" />
-            <product protocol="hid" vendor_id="0x045e" product_id="0x0719" usage_page="0x1" usage="0x4" interface_number="0x7" />
             <!-- BigBen -->
             <product protocol="hid" vendor_id="0x146b" product_id="0x601" usage_page="0x1" usage="0x4" interface_number="0x1" />
             <!-- Joytek -->
@@ -27,7 +22,7 @@
             <product protocol="hid" vendor_id="0xe6f" product_id="0x201" usage_page="0x1" usage="0x4" interface_number="0x1" />
         </devices>
     </info>
-    <controller id="Microsoft Xbox 360 controller">
+    <controller id="Microsoft Xbox 360 wired controller">
         <scriptfiles>
             <file filename="common-hid-packet-parser.js" functionprefix=""/>
             <file filename="Xbox_360_Wired_Controller.js" functionprefix="Xbox360"/>
