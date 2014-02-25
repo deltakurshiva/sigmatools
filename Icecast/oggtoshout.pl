@@ -62,85 +62,6 @@ my %downsample_opts = (   8 => "-b   8 -a --resample 16",
                        );
 
 
-sub error_alarm {
-  print STDERR "$progname: timeout: $timeout seconds with no data!\n";
-  print STDERR "$progname: bailing!\n";
-  kill 9, $parent_pid;  # Send KILL to self.  Finally.
-}
-
-
-my $bytes_60 = 0;
-my $bytes_10 = 0;
-my $bytes_1  = 0;
-my $bytes_01 = 0;
-my $start_60 = 0;
-my $start_10 = 0;
-my $start_1  = 0;
-my $start_01 = 0;
-
-sub sample_stats {
-  my ($bytes, $bps) = @_;
-  my $now = time;
-
-  if ($start_60 == 0) {
-    $start_60 = $now;
-    $start_10 = $now;
-    $start_1  = $now;
-    $start_01 = $now;
-  }
-
-  if ($now - $start_01 > 10) {
-#    report_stats ($bps, $bytes_01, $now - $start_01);
-    $start_01 = $now;
-    $bytes_01 = 0;
-  }
-
-  if ($now - $start_1  > 60) {
-    report_stats ($bps, $bytes_1, $now - $start_1);
-    $start_1 = $now;
-    $bytes_1 = 0;
-  }
-
-  if ($now - $start_10 > (60 * 10)) {
-    report_stats ($bps, $bytes_10, $now - $start_10);
-    $start_10 = $now;
-    $bytes_10 = 0;
-  }
-
-  if ($now - $start_60 > (60 * 60)) {
-    report_stats ($bps, $bytes_60, $now - $start_60);
-    $start_60 = $now;
-    $bytes_60 = 0;
-  }
-
-  $bytes_60 += $bytes;
-  $bytes_10 += $bytes;
-  $bytes_1  += $bytes;
-  $bytes_01 += $bytes;
-}
-
-sub report_stats {
-  my ($bps, $bytes_read, $seconds_elapsed) = @_;
-  my $target = $bps * 128 * $seconds_elapsed;
-
-  print STDERR "$progname: checking ($seconds_elapsed secs, " .
-    "$bytes_read bytes, $target target, " .
-    int($bytes_read * 100 / $target) . "%)\n"
-      if ($verbose > 1);
-
-  if ($bytes_read < ($target * 0.95)) {
-    my $desc = ($seconds_elapsed >= (60 * 60)
-                ? "" . int($seconds_elapsed / (60 * 60)) . " hour"
-                : $seconds_elapsed >= 60
-                ? "" . int($seconds_elapsed / 60) . " minute"
-                : "" . $seconds_elapsed . " second");
-    my $pct = int ((1.0 - ($bytes_read / $target)) * 100);
-    print STDERR "$progname: $pct% underflow, $desc interval " .
-      "($bytes_read / $target)\n";
-  }
-}
-
-
 sub relay {
   my ($in_url, $out_url, $bps, $pass) = @_;
 
@@ -354,7 +275,7 @@ sub relay {
 
 
   # Read from stdout and stderr handles.
-  while (my @ready = $select->can_read) {
+  while (my @ready = $select->can_read($timeout)) {
     foreach my $handle (@ready) {
       # Send stdout data to stream, it's converted MP3 data.
       if (fileno($handle) == fileno(*IN)) {
