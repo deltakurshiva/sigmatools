@@ -10,7 +10,7 @@ use strict;
 use bytes;
 
 require POSIX;
-use POSIX qw(setlocale);
+use POSIX qw(locale_h setlocale);
 
 use Socket;
 use IO::Select;
@@ -272,7 +272,7 @@ sub relay {
   $select->add(\*IN);
   $select->add(\*ERR);
   my ($artist, $title, $sent) = (undef, undef, 0);
-
+  my $locale = uc(split(/\./, setlocale(LC_ALL))[1] || 'ascii')
 
   # Read from stdout and stderr handles.
   while (my @ready = $select->can_read($timeout)) {
@@ -317,7 +317,7 @@ sub relay {
            }
 
            print STDERR "Sending song title $ttitle...\n" if ($verbose);
-           $conn->set_metadata(song => $ttitle, charset => 'UTF-8');
+           $conn->set_metadata(song => $ttitle, charset => $locale);
            $sent = 1;
         }
       }
